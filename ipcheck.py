@@ -78,6 +78,8 @@ class IPCheck:
         else:
             self.tgBotTimeout = self.tgBotTimeoutDefault
 
+        self.myhost = os.uname()[1]
+
     def fireNotify(self, msg = ''):
         """
         Fire notify action
@@ -137,7 +139,7 @@ class IPCheck:
 
             # testing
             if testStatus == 'test':
-                self.fireNotify('Testing config:\nURL = {}, \nResponse: {}'.format(self.ListSites[site]['check_url'], (response.text).strip()))
+                self.fireNotify('Hostname: {}\nTesting config:\n - URL = {},\n - Response: {}'.format(self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
 
             if (site not in self.CurrentIP):
                 self.CurrentIP[site] = ''
@@ -145,10 +147,10 @@ class IPCheck:
             if  parser_count:
                 if ((response.text).strip() not in self.CurrentIP[site]):
                     self.CurrentIP[site] = (response.text).strip()
-                    self.fireNotify('Current ip: {}'.format(self.CurrentIP[site]))
+                    self.fireNotify('Hostname: {}\nCurrent ip: {}'.format(self.myhost, self.CurrentIP[site]))
             else:
                 CurrentCheckTime = datetime.now()
-                message = '{} is broken'.format(self.ListSites[site]['check_url'])
+                message = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
                 if (site not in self.lastCheckTime):
                     self.lastCheckTime[site] = datetime.now()
                     self.fireNotify(message)
