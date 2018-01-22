@@ -1,0 +1,14 @@
+{
+    "main":{
+        "Version":"1.0",
+        "daemon_timeout":1
+    },
+    "tg_bot":{
+        "tg_bot_token":"000000000000000000000000000000000000000",
+        "tg_chanel_id":"00000000",
+        "tg_bot_timeout":60
+    },
+    "list_sites":{
+        "site1":{"check_url":"http://icanhazip.com"}
+    }
+}
