@@ -139,7 +139,7 @@ class IPCheck:
 
             # testing
             if testStatus == 'test':
-                self.fireNotify('Hostname: {}\nTesting config:\n - URL = {},\n - Response: {}'.format(self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
+                self.fireNotify('Hostname: {}\nTesting config:\n - URL = {},\n - Current IP: {}'.format(self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
 
             if (site not in self.CurrentIP):
                 self.CurrentIP[site] = ''
@@ -147,7 +147,7 @@ class IPCheck:
             if  parser_count:
                 if ((response.text).strip() not in self.CurrentIP[site]):
                     self.CurrentIP[site] = (response.text).strip()
-                    self.fireNotify('Hostname: {}\nCurrent ip: {}'.format(self.myhost, self.CurrentIP[site]))
+                    self.fireNotify('Hostname: {}\nCurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
             else:
                 CurrentCheckTime = datetime.now()
                 message = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
