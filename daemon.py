@@ -104,6 +104,7 @@ class Daemon:
 
         # Try killing the daemon process
         try:
+            self.stop()
             while 1:
                 os.kill(pid, SIGTERM)
                 time.sleep(0.1)

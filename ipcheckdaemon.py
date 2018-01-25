@@ -1,19 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, time, tempfile
+import os, sys, time, tempfile
 import daemon, ipcheck
  
 class IPCheck(daemon.Daemon):
     def run(self):
         c = ipcheck.IPCheck()
-
         # First message for start Daemon
-        c.fireNotify('Monitoring up')
-
+        c.fireNotify('Hostname: {}\nMonitoring up'.format(os.uname()[1]))
         while True:
             c.check()
             time.sleep(c.getDaemonTimeout())
+
+    def stop(self):
+        # First message for start Daemon
+        ipcheck.IPCheck().fireNotify('Hostname: {}\nMonitoring Down'.format(os.uname()[1]))
 
 if __name__ == '__main__':
     pidFile = tempfile.gettempdir() + '/ipcheck.pid'
