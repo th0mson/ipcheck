@@ -1,5 +1,5 @@
 [Unit]
-Description = Web site monitoring control daemon
+Description = Current IP monitoring control daemon
 After = NetworkManager-wait-online.service network.target network-online.target dbus.service
 Wants = NetworkManager-wait-online.service network-online.target
 
