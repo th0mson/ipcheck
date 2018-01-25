@@ -5,7 +5,7 @@ Wants = NetworkManager-wait-online.service network-online.target
 
 [Service]
 Type = forking
-PIDFile = /tmp/webmon.pid
+PIDFile = /tmp/ipcheck.pid
 ;WorkingDirectory=
 ExecStart = /usr/bin/python ipcheckdaemon.py start
 ExecStop = /usr/bin/python ipcheckdaemon.py stop
