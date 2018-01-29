@@ -10,5 +10,7 @@
     },
     "list_sites":{
         "site1":{"check_url":"http://icanhazip.com"}
+        "site2":{"check_url":"http://ipinfo.io/ip"}
+
     }
 }
