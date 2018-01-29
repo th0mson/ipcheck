@@ -89,6 +89,16 @@ class IPCheck:
 
         logging.info('Called fireNotify()')
 
+    def ErrorNotify(self, site, Message):
+        CurrentCheckTime = datetime.now()
+        if (site not in self.lastCheckTime):
+            self.lastCheckTime[site] = datetime.now()
+            self.fireNotify(Message)
+        if ((CurrentCheckTime - self.tgBotTimeout) >= self.lastCheckTime[site]):
+            self.fireNotify(Message)
+            self.lastCheckTime[site] = CurrentCheckTime
+        return self
+
     def getDaemonTimeout(self):
         """
         Get daemon checking timeout
@@ -122,6 +132,8 @@ class IPCheck:
         for site in sorted(self.ListSites):
             logging.debug('sourceCheck: %s', self.ListSites[site]['check_url'])
             parser_count = False
+            ErrorMessage = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
+
             try:
                 ## Get request
                 response = requests.get(self.ListSites[site]['check_url'], verify=False, timeout=(3.05, 27))
@@ -142,24 +154,32 @@ class IPCheck:
                         return self
                 else:
                     CurrentCheckTime = datetime.now()
-                    message = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
                     if (site not in self.lastCheckTime):
                         self.lastCheckTime[site] = datetime.now()
                         self.fireNotify(message)
                     # send message to telegram with interval from tgBotTimeout variable
+                    ErrorMessage += '\nIP not got'
                     if ((CurrentCheckTime - self.tgBotTimeout) >= self.lastCheckTime[site]):
-                        self.fireNotify(message)
+                        self.fireNotify(ErrorMessage)
                         self.lastCheckTime[site] = CurrentCheckTime
-            except requests.exceptions.ReadTimeout:
-               print('Oops. Read timeout occured')
-            except requests.exceptions.ConnectTimeout:
-               print('Oops. Connection timeout occured!')
-            except requests.exceptions.ConnectionError:
-               print('Seems like dns lookup failed..')
-            except requests.exceptions.HTTPError as err:
-               print('Oops. HTTP Error occured')
-               print('Response is: {content}'.format(content=err.response.content))
 
+            except requests.exceptions.ReadTimeout:
+                ErrorMessage += '\nRead timeout occured'
+                print(ErrorMessage)
+                self.ErrorNotify(site, ErrorMessage)
+            except requests.exceptions.ConnectTimeout:
+                ErrorMessage += '\nConnection timeout occured'
+                print(ErrorMessage)
+                self.ErrorNotify(site, ErrorMessage)
+            except requests.exceptions.ConnectionError:
+                ErrorMessage += '\nSeems like dns lookup failed..'
+                print(ErrorMessage)
+                self.ErrorNotify(site, ErrorMessage)
+            except requests.exceptions.HTTPError as err:
+                ErrorMessage += '\nHTTP Error occured'
+                print(ErrorMessage)
+                print('Response is: {content}'.format(content=err.response.content))
+                self.ErrorNotify(site, ErrorMessage)
 
         logging.info('End check()')
         return self
