@@ -8,7 +8,7 @@ class IPCheck(daemon.Daemon):
     def run(self):
         c = ipcheck.IPCheck()
         # First message for start Daemon
-        c.fireNotify('Hostname: {}\nMonitoring up'.format(os.uname()[1]))
+        c.fireNotify('Hostname: {}\nIPCHECK Monitoring up'.format(os.uname()[1]))
         while True:
             c.check()
             time.sleep(c.getDaemonTimeout())
