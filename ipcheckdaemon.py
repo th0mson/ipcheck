@@ -15,7 +15,7 @@ class IPCheck(daemon.Daemon):
 
     def stop(self):
         # First message for start Daemon
-        ipcheck.IPCheck().fireNotify('Hostname: {}\nMonitoring Down'.format(os.uname()[1]))
+        ipcheck.IPCheck().fireNotify('Hostname: {}\nIPCHECK Monitoring Down'.format(os.uname()[1]))
 
 if __name__ == '__main__':
     pidFile = tempfile.gettempdir() + '/ipcheck.pid'
