@@ -124,7 +124,7 @@ class IPCheck:
             parser_count = False
             try:
                 ## Get request
-                response = requests.get(self.ListSites[site]['check_url'])
+                response = requests.get(self.ListSites[site]['check_url'], verify=False, timeout=(3.05, 27))
                 ## Check content right
                 parser_count = self.dataCheck((response.text).strip())
 
