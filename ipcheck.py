@@ -151,7 +151,7 @@ class IPCheck:
                     if ((response.text).strip() not in self.CurrentIP[site]):
                         self.CurrentIP[site] = (response.text).strip()
                         self.fireNotify('Hostname: {}\nCurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
-                        return self
+                    return self
                 else:
                     CurrentCheckTime = datetime.now()
                     if (site not in self.lastCheckTime):
