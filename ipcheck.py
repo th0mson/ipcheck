@@ -127,6 +127,29 @@ class IPCheck:
                 response = requests.get(self.ListSites[site]['check_url'])
                 ## Check content right
                 parser_count = self.dataCheck((response.text).strip())
+
+                # testing
+                if testStatus == 'test':
+                    self.fireNotify('Hostname: {}\nTesting config:\n - URL = {},\n - Current IP: {}'.format(self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
+
+                if (site not in self.CurrentIP):
+                    self.CurrentIP[site] = ''
+
+                if  parser_count:
+                    if ((response.text).strip() not in self.CurrentIP[site]):
+                        self.CurrentIP[site] = (response.text).strip()
+                        self.fireNotify('Hostname: {}\nCurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
+                        return self
+                else:
+                    CurrentCheckTime = datetime.now()
+                    message = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
+                    if (site not in self.lastCheckTime):
+                        self.lastCheckTime[site] = datetime.now()
+                        self.fireNotify(message)
+                    # send message to telegram with interval from tgBotTimeout variable
+                    if ((CurrentCheckTime - self.tgBotTimeout) >= self.lastCheckTime[site]):
+                        self.fireNotify(message)
+                        self.lastCheckTime[site] = CurrentCheckTime
             except requests.exceptions.ReadTimeout:
                print('Oops. Read timeout occured')
             except requests.exceptions.ConnectTimeout:
@@ -137,27 +160,6 @@ class IPCheck:
                print('Oops. HTTP Error occured')
                print('Response is: {content}'.format(content=err.response.content))
 
-            # testing
-            if testStatus == 'test':
-                self.fireNotify('Hostname: {}\nTesting config:\n - URL = {},\n - Current IP: {}'.format(self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
-
-            if (site not in self.CurrentIP):
-                self.CurrentIP[site] = ''
-
-            if  parser_count:
-                if ((response.text).strip() not in self.CurrentIP[site]):
-                    self.CurrentIP[site] = (response.text).strip()
-                    self.fireNotify('Hostname: {}\nCurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
-            else:
-                CurrentCheckTime = datetime.now()
-                message = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
-                if (site not in self.lastCheckTime):
-                    self.lastCheckTime[site] = datetime.now()
-                    self.fireNotify(message)
-                # send message to telegram with interval from tgBotTimeout variable
-                if ((CurrentCheckTime - self.tgBotTimeout) >= self.lastCheckTime[site]):
-                    self.fireNotify(message)
-                    self.lastCheckTime[site] = CurrentCheckTime
 
         logging.info('End check()')
         return self
