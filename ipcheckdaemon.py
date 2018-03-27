@@ -8,14 +8,15 @@ class IPCheck(daemon.Daemon):
     def run(self):
         c = ipcheck.IPCheck()
         # First message for start Daemon
-        c.fireNotify('Hostname: {}\nIPCHECK Monitoring up'.format(os.uname()[1]))
+        c.fireNotify('Hostname: {}\nService: IPCHECK\nStatus: INFO\nMSG: Monitoring up'.format(os.uname()[1]))
+
         while True:
             c.check()
             time.sleep(c.getDaemonTimeout())
 
     def stop(self):
-        # First message for start Daemon
-        ipcheck.IPCheck().fireNotify('Hostname: {}\nIPCHECK Monitoring Down'.format(os.uname()[1]))
+        # Message for stop Daemon
+        ipcheck.IPCheck().fireNotify('Hostname: {}\nService: IPCHECK\nStatus: INFO\nMSG: Monitoring Down'.format(os.uname()[1]))
 
 if __name__ == '__main__':
     pidFile = tempfile.gettempdir() + '/ipcheck.pid'

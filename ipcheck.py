@@ -142,7 +142,7 @@ class IPCheck:
 
                 # testing
                 if testStatus == 'test':
-                    self.fireNotify('Hostname: {}\nTesting config:\n - URL = {},\n - Current IP: {}'.format(self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
+                    self.fireNotify('Hostname: {}\nService: IPCHECK\nStatus: INFO\nMSG:\nTesting config:\n - URL = {},\n - Current IP: {}'.format(os.uname()[1], self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
 
                 if (site not in self.CurrentIP):
                     self.CurrentIP[site] = ''
