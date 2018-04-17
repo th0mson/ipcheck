@@ -57,6 +57,21 @@ class IPCheck:
             logging.error(message)
             sys.exit(2)
 
+        if 'tg_proxy_socks_host' in cfg['tg_bot']:
+            self.tgbot_proxy_socks_host = cfg['tg_bot']['tg_proxy_socks_host']
+        else:
+            self.tgbot_proxy_socks_host = ""
+
+        if 'tg_proxy_socks_port' in cfg['tg_bot']:
+            self.tgbot_proxy_socks_port = cfg['tg_bot']['tg_proxy_socks_port']
+        else:
+            self.tgbot_proxy_socks_port = ""
+
+        if self.tgbot_proxy_socks_host != "":
+            self.tgbot_proxy_socks = "socks5://{}:{}".format(self.tgbot_proxy_socks_host, self.tgbot_proxy_socks_port)
+        else:
+            self.tgbot_proxy_socks = ""
+
         ## Load Site list
         if 'list_sites' not in cfg:
             message = 'Is not define Sites List params (sites_list) in "config.json". Daemon stopped.'
@@ -85,7 +100,7 @@ class IPCheck:
         Fire notify action
         """
         TGBot = TG_Bot(self.tgbot_token)
-        TGBot.SendMessage(self.tgbot_chanel_id, msg)
+        TGBot.SendMessage(self.tgbot_proxy_socks, self.tgbot_chanel_id, msg)
 
         logging.info('Called fireNotify()')
 

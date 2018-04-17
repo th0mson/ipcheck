@@ -10,10 +10,16 @@ class TG_Bot:
         self.token = token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
 
-    def SendMessage(self, Chanel_ID, Message):
+    def SendMessage(self, Socks_Proxy, Chanel_ID, Message):
         params = {'chat_id': Chanel_ID, 'text': Message}
         method = 'sendMessage'
-        response = requests.post(self.api_url + method, params)
+
+        if Socks_Proxy != "":
+            proxies = {'http': Socks_Proxy, 'https': Socks_Proxy}
+        else:
+            proxies = {}
+
+        response = requests.post(self.api_url + method, params, proxies=proxies)
         return response
 
 # Test function
@@ -43,8 +49,23 @@ def TGBot_Test():
         print('Not define tg_chanel_id in config.json. Script exist')
         sys.exit(2)
 
+    if 'tg_proxy_socks_host' in cfg['tg_bot']:
+        tgbot_proxy_socks_host = cfg['tg_bot']['tg_proxy_socks_host']
+    else:
+        tgbot_proxy_socks_host = ""
+
+    if 'tg_proxy_socks_port' in cfg['tg_bot']:
+        tgbot_proxy_socks_port = cfg['tg_bot']['tg_proxy_socks_port']
+    else:
+        tgbot_proxy_socks_port = ""
+
+    if tgbot_proxy_socks_host != "":
+        tgbot_proxy_socks = "socks5://{}:{}".format(tgbot_proxy_socks_host, tgbot_proxy_socks_port)
+    else:
+        tgbot_proxy_socks = ""
+
     TGBot = TG_Bot(tgbot_token)
-    TGBot.SendMessage(tgbot_chanel_id, 'test message')
+    TGBot.SendMessage(tgbot_proxy_socks, tgbot_chanel_id, 'test message')
 
 if __name__ == '__main__':
     TGBot_Test()
