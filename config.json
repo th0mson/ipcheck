@@ -9,11 +9,9 @@
         "tg_bot_timeout":60,
         "tg_proxy_socks_host":"socks.url",
         "tg_proxy_socks_port":"12345"
-
     },
     "list_sites":{
         "site1":{"check_url":"http://icanhazip.com"},
         "site2":{"check_url":"http://ipinfo.io/ip"}
-
     }
 }
