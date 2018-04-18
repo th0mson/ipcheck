@@ -68,7 +68,8 @@ class IPCheck:
             self.tgbot_proxy_socks_port = ""
 
         if self.tgbot_proxy_socks_host != "":
-            self.tgbot_proxy_socks = "socks5://{}:{}".format(self.tgbot_proxy_socks_host, self.tgbot_proxy_socks_port)
+#            self.tgbot_proxy_socks = "socks5://{}:{}".format(self.tgbot_proxy_socks_host, self.tgbot_proxy_socks_port)
+            self.tgbot_proxy_socks = "{}:{}".format(self.tgbot_proxy_socks_host, self.tgbot_proxy_socks_port)
         else:
             self.tgbot_proxy_socks = ""
 
@@ -147,7 +148,7 @@ class IPCheck:
         for site in sorted(self.ListSites):
             logging.debug('sourceCheck: %s', self.ListSites[site]['check_url'])
             parser_count = False
-            ErrorMessage = 'Hostname: {}\n{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
+            ErrorMessage = 'Hostname: {}%0A{} is broken'.format(self.myhost, self.ListSites[site]['check_url'])
 
             try:
                 ## Get request
@@ -157,7 +158,7 @@ class IPCheck:
 
                 # testing
                 if testStatus == 'test':
-                    self.fireNotify('Hostname: {}\nService: IPCHECK\nStatus: INFO\nMSG:\nTesting config:\n - URL = {},\n - Current IP: {}'.format(os.uname()[1], self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
+                    self.fireNotify('Hostname: {}%0AService: IPCHECK%0AStatus: INFO%0AMSG:%0ATesting config:%0A - URL = {},%0A - Current IP: {}'.format(os.uname()[1], self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
 
                 if (site not in self.CurrentIP):
                     self.CurrentIP[site] = ''
@@ -165,7 +166,7 @@ class IPCheck:
                 if  parser_count:
                     if ((response.text).strip() not in self.CurrentIP[site]):
                         self.CurrentIP[site] = (response.text).strip()
-                        self.fireNotify('Hostname: {}\nCurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
+                        self.fireNotify('Hostname: {}%0ACurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
                     return self
                 else:
                     CurrentCheckTime = datetime.now()
@@ -173,7 +174,7 @@ class IPCheck:
                         self.lastCheckTime[site] = datetime.now()
                         self.fireNotify(message)
                     # send message to telegram with interval from tgBotTimeout variable
-                    ErrorMessage += '\nIP not got'
+                    ErrorMessage += '%0AIP not got'
                     if ((CurrentCheckTime - self.tgBotTimeout) >= self.lastCheckTime[site]):
                         self.fireNotify(ErrorMessage)
                         self.lastCheckTime[site] = CurrentCheckTime

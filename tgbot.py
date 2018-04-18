@@ -3,7 +3,7 @@
 
 import os, sys
 import json
-import requests #pip install requests
+import requests #pip install requests[socks]
 
 class TG_Bot:
     def __init__(self, token):
@@ -18,8 +18,9 @@ class TG_Bot:
             proxies = {'http': Socks_Proxy, 'https': Socks_Proxy}
         else:
             proxies = {}
-
-        response = requests.post(self.api_url + method, params, proxies=proxies)
+        #response = requests.post(self.api_url + method, params, proxies=proxies)
+        req = """curl --socks5-hostname {} -D- '{}{}?chat_id={}&text={}' --silent --output /dev/null""".format(Socks_Proxy, self.api_url, method, Chanel_ID, Message)
+        response = os.system(req)
         return response
 
 # Test function
@@ -60,7 +61,8 @@ def TGBot_Test():
         tgbot_proxy_socks_port = ""
 
     if tgbot_proxy_socks_host != "":
-        tgbot_proxy_socks = "socks5://{}:{}".format(tgbot_proxy_socks_host, tgbot_proxy_socks_port)
+#        tgbot_proxy_socks = "socks5://{}:{}".format(tgbot_proxy_socks_host, tgbot_proxy_socks_port)
+        tgbot_proxy_socks = "{}:{}".format(tgbot_proxy_socks_host, tgbot_proxy_socks_port)
     else:
         tgbot_proxy_socks = ""
 
