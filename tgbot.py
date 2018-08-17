@@ -60,9 +60,13 @@ def TGBot_Test():
     else:
         tgbot_proxy_socks_port = ""
 
+    if 'tg_proxy_socks_user' in cfg['tg_bot']:
+        tgbot_proxy_socks_auth = "{}:{}@".format(cfg['tg_bot']['tg_proxy_socks_user'], cfg['tg_bot']['tg_proxy_socks_passw'])
+    else:
+        tgbot_proxy_socks_auth = ""
+
     if tgbot_proxy_socks_host != "":
-#        tgbot_proxy_socks = "socks5://{}:{}".format(tgbot_proxy_socks_host, tgbot_proxy_socks_port)
-        tgbot_proxy_socks = "{}:{}".format(tgbot_proxy_socks_host, tgbot_proxy_socks_port)
+        tgbot_proxy_socks = "{}{}:{}".format(tgbot_proxy_socks_auth, tgbot_proxy_socks_host, tgbot_proxy_socks_port)
     else:
         tgbot_proxy_socks = ""
 
