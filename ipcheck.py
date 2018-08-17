@@ -73,7 +73,7 @@ class IPCheck:
             self.tgbot_proxy_socks_auth = ""
 
         if self.tgbot_proxy_socks_host != "":
-            self.tgbot_proxy_socks = "{}{}:{}".format(tgbot_proxy_socks_auth, tgbot_proxy_socks_host, tgbot_proxy_socks_port)
+            self.tgbot_proxy_socks = "{}{}:{}".format(self.tgbot_proxy_socks_auth, self.tgbot_proxy_socks_host, self.tgbot_proxy_socks_port)
         else:
             self.tgbot_proxy_socks = ""
 
@@ -162,7 +162,8 @@ class IPCheck:
 
                 # testing
                 if testStatus == 'test':
-                    self.fireNotify('Hostname: {}%0AService: IPCHECK%0AStatus: INFO%0AMSG:%0ATesting config:%0A - URL = {},%0A - Current IP: {}'.format(os.uname()[1], self.myhost, self.ListSites[site]['check_url'], (response.text).strip()))
+                    self.fireNotify('Hostname: {}%0AService: IPCHECK%0AStatus: INFO%0AMSG:%0ATesting config:%0A - URL = {},%0A - Current IP: {}'.format(os.uname()[1], self.ListSites[site]['check_url'], (response.text).strip()))
+		    return self
 
                 if (site not in self.CurrentIP):
                     self.CurrentIP[site] = ''
@@ -170,7 +171,7 @@ class IPCheck:
                 if  parser_count:
                     if ((response.text).strip() not in self.CurrentIP[site]):
                         self.CurrentIP[site] = (response.text).strip()
-                        self.fireNotify('Hostname: {}%0ACurrent IP: {}'.format(self.myhost, self.CurrentIP[site]))
+                        self.fireNotify('Hostname: {}%0AService: IPCHECK%0AStatus: INFO%0AMSG:%0A - Current IP: {}'.format(os.uname()[1], (response.text).strip()))
                     return self
                 else:
                     CurrentCheckTime = datetime.now()
